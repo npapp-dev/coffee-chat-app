@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Chat from './components/Chat';
 import PersonalInfo from './components/PersonalInfo';
 import Styles from './components/Styles';
-import { AppLoading } from "expo";
+import AppLoading from 'expo-app-loading';
 
 export default function App() {
   const storageUserNameKey = "chatapp-username";
@@ -33,7 +33,7 @@ export default function App() {
 
   if(isLoading){
     return(
-      <AppLoading startAsync={fetchPersonalData} onFinish={()=> setIsLoading(false)}/>
+      <AppLoading startAsync={fetchPersonalData} onFinish={()=> setIsLoading(false)} onError={console.warn}/>
     )
   }
 
