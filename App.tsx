@@ -6,41 +6,43 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Chat from './components/Chat';
 import PersonalInfo from './components/PersonalInfo';
 import Styles from './components/Styles';
-import AppLoading from 'expo-app-loading';
+import * as SplashScreen from 'expo-splash-screen';
+
+SplashScreen.preventAutoHideAsync()
+.then(result => {
+  console.log(`SplashScreen.preventAutoHideAsync() succeeded: ${result}`)
+})
+.catch(console.warn);
 
 export default function App() {
   const storageUserNameKey = "chatapp-username";
   const storageImageKey = "chatapp-image";
   const [username, setUserName] = useState("");
-  const [image, setImage]= useState("");
-  const [isLoading, setIsLoading ]= useState(true);
+  const [image, setImage] = useState("");
 
-  const fetchPersonalData = async() =>{
+  const fetchPersonalData = async () => {
     let fetchedUsername = await AsyncStorage.getItem(storageUserNameKey);
     let userName = fetchedUsername == null ? "" : fetchedUsername;
     let fetchedImage = await AsyncStorage.getItem(storageImageKey);
     let image = fetchedImage == null ? "" : fetchedImage;
     setUserName(userName);
     setImage(image);
+    SplashScreen.hideAsync();
   };
 
-  const onPersonalInfoClosed = async (name:string, image: string)=>{
-      setUserName(name);
-      await AsyncStorage.setItem(storageUserNameKey, name);
-      setImage(image);
-      await AsyncStorage.setItem(storageImageKey, image);
+  const onPersonalInfoClosed = async (name: string, image: string) => {
+    setUserName(name);
+    await AsyncStorage.setItem(storageUserNameKey, name);
+    setImage(image);
+    await AsyncStorage.setItem(storageImageKey, image);
   }
-
-  if(isLoading){
-    return(
-      <AppLoading startAsync={fetchPersonalData} onFinish={()=> setIsLoading(false)} onError={console.warn}/>
-    )
-  }
+  
+  fetchPersonalData();
 
   let activeComponent = username != "" ? (
-    <Chat username = {username} image = {image}/>
+    <Chat username={username} image={image} />
   ) : (
-    <PersonalInfo onClosed ={onPersonalInfoClosed}/>
+    <PersonalInfo onClosed={onPersonalInfoClosed} />
   )
 
   return (

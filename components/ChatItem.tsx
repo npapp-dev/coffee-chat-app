@@ -33,7 +33,7 @@ const RenderChatItem = ({chatItem, username}: Props)=>{
             </View>
             <View>
             <Text style={Styles.smallItalicText}>
-                {chatItem.by} at {new Date(chatItem.timeStamp).toLocaleTimeString}
+                {chatItem.by} at {new Date(chatItem.timeStamp).toLocaleTimeString()}
             </Text>
         </View>
         <Text style={Styles.chatText} > {chatItem.text}</Text>
