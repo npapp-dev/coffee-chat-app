@@ -1,6 +1,6 @@
 import Styles from "./Styles";
-import React, { useState } from "react";
-import {View, Text, TextInput, Button, FlatList, ListRenderItem,Image } from "react-native";
+import React, { useEffect, useState } from "react";
+import {View, Text, TextInput, Button, FlatList, ListRenderItem,Image, Animated, Easing } from "react-native";
 
 interface ChatItem{
     id: string;
@@ -19,9 +19,21 @@ const RenderChatItem = ({chatItem, username}: Props)=>{
     let unknownAvatarImage = "";
     let avatarImage = chatItem.image ?? unknownAvatarImage;
 
+    let [animatedValue] = useState(new Animated.Value(0));
+    useEffect(()=>{
+        Animated.timing(animatedValue, {
+            toValue: 1,
+            duration: 400,
+            easing: (number) => Easing.ease(number),
+            useNativeDriver: true,
+        }).start();
+    });
+
     return (
-        <View style={[
-            Styles.flatListItem, {borderColor: username == chatItem.by ? "green" : "blue"} 
+        <Animated.View style={[
+            Styles.flatListItem, {borderColor: username == chatItem.by ? "green" : "blue"},
+            {opacity: animatedValue},
+            {transform: [{scale: animatedValue}]}
         ]}
         >
             <View style={Styles.chatItemHeader}>
@@ -37,7 +49,7 @@ const RenderChatItem = ({chatItem, username}: Props)=>{
             </Text>
         </View>
         <Text style={Styles.chatText} > {chatItem.text}</Text>
-        </View>
+        </Animated.View>
     )
 
 } 
